@@ -33,7 +33,7 @@ target_link_libraries(test_version
     helloworld
 )
 
-if (MSVC)
+if (WIN32)
     target_compile_options(helloworld_cli PRIVATE
         /W4
     )
@@ -43,7 +43,11 @@ if (MSVC)
     target_compile_options(test_version PRIVATE
         /W4
     )
-else ()
+
+    install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
+    
+    set(CPACK_GENERATOR ZIP NSIS)
+elseif (UNIX)
     target_compile_options(helloworld_cli PRIVATE
         -Wall -Wextra -pedantic -Werror
     )
@@ -53,19 +57,29 @@ else ()
     target_compile_options(test_version PRIVATE
         -Wall -Wextra -pedantic -Werror
     )
+
+    install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
+    
+    set(CPACK_GENERATOR DEB RPM)
+    
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "example@example.com")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-test-dev")
 endif()
-
-
-
-install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
-
-set(CPACK_GENERATOR DEB)
 
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 
 set(CPACK_PACKAGE_CONTACT example@example.com)
+
+if (WIN32)
+    set(CPACK_PACKAGE_FILE_NAME "helloworld-1.0.${PROJECT_VERSION}-Windows")
+    set(CPACK_NSIS_DISPLAY_NAME "Hello World 1.0.${PROJECT_VERSION}")
+    set(CPACK_NSIS_PACKAGE_NAME "Hello World")
+elseif (UNIX)
+    set(CPACK_PACKAGE_FILE_NAME "helloworld-1.0.${PROJECT_VERSION}-Linux")
+    set(CPACK_DEBIAN_FILE_NAME "helloworld-1.0.${PROJECT_VERSION}-${CMAKE_SYSTEM_PROCESSOR}.deb")
+endif()
 
 include(CPack)
 
