@@ -78,7 +78,7 @@ if (WIN32)
     set(CPACK_NSIS_PACKAGE_NAME "Hello World")
 elseif (UNIX)
     set(CPACK_PACKAGE_FILE_NAME "helloworld-${PROJECT_VERSION}-Linux")
-    set(CPACK_DEBIAN_FILE_NAME "helloworld-${PROJECT_VERSION}-${CMAKE_SYSTEM_PROCESSOR}.deb")
+    set(CPACK_DEBIAN_FILE_NAME "helloworld-${PROJECT_VERSION}-Linux.deb")
 endif()
 
 include(CPack)
